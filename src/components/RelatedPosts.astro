@@ -1,0 +1,20 @@
+---
+import PostCard from './PostCard.astro';
+import type { Post } from '../lib/cms';
+
+interface Props {
+  posts: Post[];
+  title?: string;
+}
+
+const { posts, title = 'Related Posts' } = Astro.props;
+---
+
+{posts.length > 0 && (
+  <section class="related-posts">
+    <h2 class="related-posts__title">{title}</h2>
+    <div class="related-posts__grid">
+      {posts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+)}

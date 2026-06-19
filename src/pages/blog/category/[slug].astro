@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Nav from '../../../components/Nav.astro';
+import Footer from '../../../components/Footer.astro';
+import PostCard from '../../../components/PostCard.astro';
+import { getCategory } from '../../../lib/cms';
+
+export async function getStaticPaths() {
+  try {
+    const res = await fetch(`${import.meta.env.PUBLIC_CMS_API_URL || 'http://localhost:4000'}/api/categories`);
+    if (!res.ok) return [];
+    const categories = await res.json();
+    return categories.map((cat: { slug: string }) => ({ params: { slug: cat.slug } }));
+  } catch {
+    return [];
+  }
+}
+
+const { slug } = Astro.params;
+const category = slug ? await getCategory(slug) : null;
+
+if (!category) {
+  return Astro.redirect('/blog/');
+}
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://www.archuramedia.com';
+const metaTitle = category.seoMetaTitle || `${category.name} | Archura Media Blog`;
+const metaDescription = category.seoMetaDescription || category.description || '';
+const ogImage = category.seoOgImage?.url || category.coverImage?.url;
+const posts = category.posts || [];
+---
+
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  canonical={`${siteUrl}/blog/category/${category.slug}/`}
+  ogTitle={metaTitle}
+  ogDescription={metaDescription}
+  ogImage={ogImage}
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: category.name,
+    description: metaDescription,
+    url: `${siteUrl}/blog/category/${category.slug}/`,
+  }}
+>
+  <Nav />
+  <main class="blog-page">
+    <div class="category-header">
+      {category.coverImage && (
+        <img src={category.coverImage.url} alt={category.name} style="max-width:200px;border-radius:12px;margin-bottom:1rem;" />
+      )}
+      <h1>{category.name}</h1>
+      {category.description && <p>{category.description}</p>}
+    </div>
+    <div class="container">
+      <div class="blog-grid">
+        {posts.map((post) => <PostCard post={post} />)}
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

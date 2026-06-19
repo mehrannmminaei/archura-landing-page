@@ -1,0 +1,164 @@
+/* CSS Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  line-height: 1.6;
+  color: #d2d2d2;
+  background-color: #060606;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 1.25rem;
+  color: #ffffff;
+}
+
+p {
+  margin-bottom: 1.25rem;
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+a {
+  text-decoration: none;
+  color: #dc3c0a;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+a:hover {
+  color: #dc3c0a;
+}
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 20px 60px;
+  background-color: #dc3c0a;
+  color: #ffffff;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  border-radius: 1vh !important;
+}
+
+a.btn {
+  font-size: 1.3rem;
+}
+
+.btn:hover {
+  background-color: #dc3c0a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px #ff4b00;
+  color: #ffffff;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid #dc3c0a;
+  color: #dc3c0a;
+  font-weight: 700;
+}
+
+.btn-outline:hover {
+  background-color: #dc3c0a;
+  color: #ffffff;
+}
+
+section {
+  padding: 160px 0;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  line-height: 1.4;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: #d2d2d2;
+  margin-bottom: 60px;
+}
+
+.logo {
+  display: flex;
+
+  color: #ffffff;
+}
+
+.get-in-touch {
+  background-color: #dc3c0a !important;
+}
+
+.btn-get-in-touch {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .section-subtitle {
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .btn {
+    padding: 15px 45px;
+    min-width: 260px;
+  }
+  /* .section-title {
+    font-size: 2rem;
+  }
+  a.btn {
+    font-size: 1rem;
+  }
+
+  p {
+    margin-bottom: 1.2rem;
+    font-size: 1rem;
+  }*/
+}
+
+@media (max-width: 446px) {
+  .btn {
+    padding: 10px 30px;
+    min-width: 260px;
+  }
+
+  a.btn {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .btn {
+    padding: 10px 24px;
+    min-width: 230px;
+  }
+
+  a.btn {
+    font-size: 1.1rem;
+  }
+}

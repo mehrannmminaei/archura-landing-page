@@ -1,0 +1,147 @@
+/* Hero Section */
+#hero {
+  padding: 200px 0 160px;
+  background-color: #060606;
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content {
+  max-width: 936px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-title {
+  font-size: 4rem;
+  margin-bottom: 30px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.hero-subtitle {
+  font-size: 1.6rem;
+  margin-bottom: 30px;
+  color: #d2d2d2;
+  font-weight: 400;
+}
+
+.hero-btns {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+/* Hero background elements */
+.geo-shape {
+  position: absolute;
+  opacity: 0.09;
+  z-index: 1;
+}
+
+.circle {
+  border-radius: 50%;
+  background-color: #0aaadc;
+}
+
+.square {
+  background-color: #0aaadc;
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  border-left: 100px solid transparent;
+  border-right: 100px solid transparent;
+  border-bottom: 173px solid #0aaadc;
+}
+
+.shape-1 {
+  width: 300px;
+  height: 300px;
+  top: 100px;
+  left: -100px;
+}
+
+.shape-2 {
+  width: 200px;
+  height: 200px;
+  bottom: -50px;
+  right: -50px;
+  transform: rotate(45deg);
+}
+
+.shape-3 {
+  top: 50%;
+  right: 10%;
+  transform: rotate(30deg) translateY(-50%);
+}
+
+@media (max-width: 1200px) {
+  #hero {
+    padding: 160px 0px 100px 0px;
+  }
+}
+
+@media (max-width: 768px) {
+  #hero {
+    padding: 120px 0px 60px 0px;
+  }
+
+  .hero-btns {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-title {
+    /* font-size: 3rem;*/
+    white-space: wrap;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-title {
+    /* font-size: 2.5rem;
+    padding-top: 10px;*/
+    white-space: wrap;
+  }
+  /* .hero-subtitle {
+   font-size: 1.3rem;
+  }*/
+}
+
+@media (max-width: 465px) {
+  .hero-title {
+    /* font-size: 2rem;
+    padding-top: 10px;*/
+    white-space: wrap;
+  }
+  /*.hero-subtitle {
+    font-size: 1.1rem;
+  }*/
+}
+
+@media (max-width: 400px) {
+  .hero-title {
+    font-size: 3rem;
+    padding-top: 10px;
+    white-space: wrap;
+  }
+  /*.hero-subtitle {
+    font-size: 1rem;
+  }*/
+}
+
+@media (max-width: 370px) {
+  .hero-title {
+    /* font-size: 1.5rem;
+    padding-top: 10px;*/
+    white-space: wrap;
+  }
+  /*.hero-subtitle {
+    font-size: 1rem;
+  }*/
+}

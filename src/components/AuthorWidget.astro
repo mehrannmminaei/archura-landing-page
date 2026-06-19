@@ -1,0 +1,33 @@
+---
+import type { Author } from '../lib/cms';
+import { stripHtml } from '../lib/cms';
+
+interface Props {
+  author: Author;
+}
+
+const { author } = Astro.props;
+const bioText = author.bio ? stripHtml(author.bio) : '';
+---
+
+<aside class="author-widget">
+  <div class="author-widget__inner">
+    {author.avatar && (
+      <img class="author-widget__avatar" src={author.avatar.url} alt={author.name} />
+    )}
+    <div class="author-widget__content">
+      <h3 class="author-widget__name">
+        <a href={`/blog/author/${author.slug}/`}>{author.name}</a>
+      </h3>
+      {author.title && <p class="author-widget__title">{author.title}</p>}
+      {bioText && <p class="author-widget__bio">{bioText.slice(0, 200)}{bioText.length > 200 ? '…' : ''}</p>}
+      {author.socialLinks && author.socialLinks.length > 0 && (
+        <div class="author-widget__social">
+          {author.socialLinks.map((link) => (
+            <a href={link.url} target="_blank" rel="noopener noreferrer">{link.platform}</a>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</aside>

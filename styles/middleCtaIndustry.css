@@ -1,0 +1,50 @@
+/* CTA Section */
+#cta {
+  background-color: #101010;
+  padding: 160px 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-content {
+  max-width: 936px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.cta-title {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  line-height: 1.4;
+}
+
+.cta-subtitle {
+  font-size: 1.2rem;
+  color: #d2d2d2;
+  margin-bottom: 30px;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+@media (max-width: 1200px) {
+  #cta {
+    padding: 100px 0;
+  }
+}
+@media (max-width: 768px) {
+  #cta {
+    padding: 60px 0;
+  }
+  .cta-buttons {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 30px;
+  }
+}

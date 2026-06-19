@@ -1,0 +1,136 @@
+---
+import { getAssetBase } from '../lib/assetBase';
+
+const base = getAssetBase(Astro.url.pathname);
+---
+
+<header>
+  <div class="container">
+    <nav>
+      <a href={`${base}index.html`} class="logo">
+        <img src={`${base}logo-v3.png`} alt="Archura Media" />
+      </a>
+      <ul class="nav-links">
+        <li class="dropdown mobile">
+          <div class="nnav-container">
+            <div class="nnav-item">
+              <div class="nnav-ques">
+                <a>
+                  Services
+                  <span class="dropdown-indicator"><i class="fas fa-chevron-down"></i></span>
+                </a>
+              </div>
+              <div class="nnav-answer">
+                <a class="mobile-menu-item" href={`${base}services/SearchEngineOptimization`}>Search Engine Optimization</a>
+                <a class="mobile-menu-item" href={`${base}services/ContentMarketing`}>Content Marketing</a>
+                <a class="mobile-menu-item" href={`${base}services/PPCAdvertising`}>PPC Advertising</a>
+              </div>
+            </div>
+            <div class="nnav-item">
+              <div class="nnav-ques">
+                <a>
+                  Industries
+                  <span class="dropdown-indicator"><i class="fas fa-chevron-down"></i></span>
+                </a>
+              </div>
+              <div class="nnav-answer">
+                <a class="mobile-menu-item" href={`${base}industry/iGaming`}>iGaming</a>
+                <a class="mobile-menu-item" href={`${base}industry/Crypto`}>Crypto</a>
+                <a class="mobile-menu-item" href={`${base}industry/AI`}>AI</a>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="dropdown desktop">
+          <a>
+            Services
+            <span class="dropdown-indicator"><i class="fas fa-chevron-down"></i></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a href={`${base}services/SearchEngineOptimization`}>
+                Search Engine Optimization
+              </a>
+            </li>
+            <li>
+              <a href={`${base}services/ConversionRateOptimization`}>
+                Conversion Rate Optimization
+              </a>
+            </li>
+            <li>
+              <a href={`${base}services/ConsultationServices`}>
+                Consultation Services
+              </a>
+            </li>
+            <li>
+              <a href={`${base}services/PPCAdvertising`}>PPC Advertising</a>
+            </li>
+            <li>
+              <a href={`${base}services/EmailMarketing`}>Email Marketing</a>
+            </li>
+            <li>
+              <a href={`${base}services/WebsiteDesignDevelopment`}>
+                Website Design &amp; Development
+              </a>
+            </li>
+            <li>
+              <a href={`${base}services/LandingPageDesign`}>Landing Page Design</a>
+            </li>
+            <li>
+              <a href={`${base}services/Analytics`}>
+                Analytics &amp; Performance Reporting
+              </a>
+            </li>
+            <li>
+              <a href={`${base}services/RetentionMarketing`}>Retention Marketing</a>
+            </li>
+            <li>
+              <a href={`${base}services/ContentMarketing`}>Content Marketing</a>
+            </li>
+            <li>
+              <a href={`${base}services/DomainTrademark`}>
+                Domain &amp; Trademark Monitoring
+              </a>
+            </li>
+            <li>
+              <a href={`${base}services/GreyHat`}>Grey Hat &amp; Guerilla Marketing</a>
+            </li>
+          </ul>
+        </li>
+        <li class="dropdown desktop">
+          <a>
+            Industries
+            <span class="dropdown-indicator"><i class="fas fa-chevron-down"></i></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href={`${base}industry/iGaming`}>iGaming</a></li>
+            <li><a href={`${base}industry/Crypto`}>Crypto</a></li>
+            <li>
+              <a href={`${base}industry/FintechMarketingSolutions`}>Fintech</a>
+            </li>
+            <li><a href={`${base}industry/AI`}>AI</a></li>
+            <li><a href={`${base}industry/SaaS`}>SaaS</a></li>
+            <li><a href={`${base}industry/B2B`}>B2B</a></li>
+            <li>
+              <a href={`${base}industry/EcommerceMarketingSolutions`}>
+                Ecommerce
+              </a>
+            </li>
+            <li>
+              <a href={`${base}industry/SoftwareMarketingSolutions`}>Software</a>
+            </li>
+          </ul>
+        </li>
+        <li><a href={`${base}blog/`}>Blog</a></li>
+        <li class="nav-cta">
+          <a href={`${base}index.html#contact`} class="btn btn-get-in-touch">Contact Us</a>
+        </li>
+      </ul>
+      <div class="mobile-menu">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </nav>
+  </div>
+</header>

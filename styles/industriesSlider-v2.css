@@ -1,0 +1,132 @@
+/* Industries Section - Ticker Style */
+#industries {
+  background-color: #060606;
+  padding: 160px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.ticker-row {
+  position: relative;
+  overflow: hidden;
+  height: 30px; /* Reduced height for simpler design */
+  margin-bottom: 60px;
+}
+
+.ticker-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+}
+
+.ticker-track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.ticker-right .ticker-track {
+  animation-name: ticker-move-right;
+  /*  animation-duration: 100s; Default duration */
+}
+
+.ticker-left .ticker-track {
+  animation-name: ticker-move-left;
+  /* animation-duration: 100s;  Default duration */
+}
+
+.ticker-icon-size {
+  font-size: 30px;
+}
+/*@keyframes ticker-move-right {
+  0% {
+    transform: translateX(0);
+    -webkit-transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-1200%);
+  }
+}
+
+@keyframes ticker-move-left {
+  0% {
+    transform: translateX(-1300%);
+    -webkit-transform: translateX(-1300%);
+  }
+  100% {
+    transform: translateX(0);
+    -webkit-transform: translateX(0);
+  }
+}*/
+
+/* Simplified industry items */
+.industry-item {
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+  position: relative;
+  white-space: nowrap;
+}
+
+.industry-item:not(:last-child)::after {
+  content: '|';
+  position: absolute;
+  right: 0;
+  color: #292929;
+}
+
+.industry-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+}
+
+.industry-icon i {
+  font-size: 30px;
+  color: #dc3c0a;
+}
+
+.industry-title {
+  font-size: 1.1rem;
+  margin: 0;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.section-header {
+  text-align: center;
+  padding: 0 20px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 1200px) {
+  #industries {
+    padding: 100px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  #industries {
+    padding: 60px 0;
+  }
+}

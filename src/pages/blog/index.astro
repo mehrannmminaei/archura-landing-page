@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPublishedPosts } from '../../lib/cms';
+
+let posts = [];
+try {
+  posts = await getPublishedPosts();
+} catch {
+  posts = [];
+}
+
+const categories = [...new Map(posts.map((p) => [p.category.slug, p.category])).values()];
+---
+
+<BaseLayout
+  title="Blog | Archura Media"
+  description="Digital marketing insights, SEO tips, and growth strategies from Archura Media experts."
+  ogType="website"
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'Archura Media Blog',
+    url: new URL('/blog/', Astro.site).toString(),
+  }}
+>
+  <Nav />
+  <main class="blog-page">
+    <div class="container">
+      <div class="blog-hero">
+        <h1>Archura Media Blog</h1>
+        <p>Expert insights on SEO, content marketing, PPC, and digital growth.</p>
+      </div>
+      {categories.length > 0 && (
+        <div class="blog-filters">
+          <a href="/blog/">All</a>
+          {categories.map((cat) => (
+            <a href={`/blog/category/${cat.slug}/`}>{cat.name}</a>
+          ))}
+        </div>
+      )}
+      <div class="blog-grid">
+        {posts.length === 0 ? (
+          <p>No posts published yet. Check back soon.</p>
+        ) : (
+          posts.map((post) => <PostCard post={post} />)
+        )}
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

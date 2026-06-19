@@ -1,0 +1,20 @@
+{
+  "name": "archura-media-site",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "dev:blog": "astro dev",
+    "prebuild": "node scripts/prebuild.mjs",
+    "build": "astro build",
+    "postbuild": "node scripts/copy-blog.mjs",
+    "preview": "astro preview",
+    "serve": "node scripts/serve.mjs",
+    "start": "PUBLIC_CMS_API_URL=http://localhost:4000 npm run build && npm run serve",
+    "build:blog": "npm run build",
+    "sitemap": "node scripts/generate-sitemap.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.7.10"
+  }
+}

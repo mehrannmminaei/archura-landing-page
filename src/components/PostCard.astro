@@ -1,0 +1,30 @@
+---
+import type { Post } from '../lib/cms';
+import { formatDate } from '../lib/cms';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const href = `/blog/${post.slug}/`;
+---
+
+<article class="blog-card">
+  <a href={href} class="blog-card__link">
+    {post.coverImage ? (
+      <img class="blog-card__image" src={post.coverImage.url} alt={post.coverImage.alt || post.title} loading="lazy" />
+    ) : (
+      <div class="blog-card__placeholder">Archura Media</div>
+    )}
+    <div class="blog-card__body">
+      <span class="blog-card__category">{post.category.name}</span>
+      <h3 class="blog-card__title">{post.title}</h3>
+      {post.excerpt && <p class="blog-card__excerpt">{post.excerpt}</p>}
+      <div class="blog-card__meta">
+        <span>{post.author.name}</span>
+        <span>{formatDate(post.publishedAt)}</span>
+      </div>
+    </div>
+  </a>
+</article>

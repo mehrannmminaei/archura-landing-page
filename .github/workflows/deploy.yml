@@ -1,0 +1,46 @@
+name: Build and Deploy Blog
+
+on:
+  push:
+    branches: [main, master]
+  repository_dispatch:
+    types: [cms-publish]
+  workflow_dispatch:
+
+env:
+  SITE_URL: https://www.archuramedia.com
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Astro site
+        run: npm run build
+        env:
+          PUBLIC_CMS_API_URL: ${{ secrets.CMS_API_URL }}
+
+      - name: Merge legacy static pages into dist
+        run: |
+          cp index.html services.html industry.html dist/ 2>/dev/null || true
+          cp -r services industry privacy-terms dist/ 2>/dev/null || true
+          cp robots.txt sitemap*.xml favicon.ico logo*.png dist/ 2>/dev/null || true
+
+      - name: Deploy via FTP
+        if: ${{ secrets.FTP_SERVER != '' }}
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ${{ secrets.FTP_SERVER_DIR || '/' }}

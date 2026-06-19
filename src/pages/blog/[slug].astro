@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import AuthorWidget from '../../components/AuthorWidget.astro';
+import RelatedPosts from '../../components/RelatedPosts.astro';
+import { buildPostJsonLd } from '../../lib/postJsonLd';
+import { formatDate, getPost, getRelatedPosts } from '../../lib/cms';
+
+export async function getStaticPaths() {
+  try {
+    const res = await fetch(`${import.meta.env.PUBLIC_CMS_API_URL || 'http://localhost:4000'}/api/posts?status=published`);
+    if (!res.ok) return [];
+    const posts = await res.json();
+    return posts.map((post: { slug: string }) => ({ params: { slug: post.slug } }));
+  } catch {
+    return [];
+  }
+}
+
+const { slug } = Astro.params;
+const post = slug ? await getPost(slug) : null;
+
+if (!post) {
+  return Astro.redirect('/blog/');
+}
+
+const related = await getRelatedPosts(slug!);
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://www.archuramedia.com';
+const canonical = post.seoCanonicalUrl || `${siteUrl}/blog/${post.slug}/`;
+const metaTitle = post.seoMetaTitle || `${post.title} | Archura Media Blog`;
+const metaDescription = post.seoMetaDescription || post.excerpt || post.title;
+const ogImage = post.seoOgImage?.url || post.coverImage?.url;
+const jsonLd =
+  post.seoJsonLd ||
+  buildPostJsonLd(
+    {
+      title: post.title,
+      slug: post.slug,
+      excerpt: post.excerpt,
+      seoMetaTitle: post.seoMetaTitle,
+      seoMetaDescription: post.seoMetaDescription,
+      seoCanonicalUrl: post.seoCanonicalUrl,
+      seoOgImage: post.seoOgImage,
+      coverImage: post.coverImage,
+      publishedAt: post.publishedAt,
+      updatedAt: post.updatedAt,
+      author: post.author,
+    },
+    siteUrl,
+  );
+---
+
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  canonical={canonical}
+  ogTitle={post.seoOgTitle || metaTitle}
+  ogDescription={post.seoOgDescription || metaDescription}
+  ogImage={ogImage}
+  ogType="article"
+  jsonLd={jsonLd}
+>
+  <Nav />
+  <article class="post-detail">
+    {post.coverImage ? (
+      <img class="post-cover" src={post.coverImage.url} alt={post.coverImage.alt || post.title} />
+    ) : (
+      <div class="post-cover-placeholder"></div>
+    )}
+
+    <div class="post-meta-bar">
+      <div class="container">
+        <span>
+          By <a href={`/blog/author/${post.author.slug}/`}>{post.author.name}</a>
+        </span>
+        <span>{formatDate(post.publishedAt)}</span>
+        <span>
+          <a href={`/blog/category/${post.category.slug}/`}>{post.category.name}</a>
+        </span>
+      </div>
+    </div>
+
+    <div class="post-content-wrap">
+      <h1>{post.title}</h1>
+      <div class="post-content" set:html={post.content} />
+    </div>
+
+    <AuthorWidget author={post.author} />
+    <RelatedPosts posts={related} title={`More in ${post.category.name}`} />
+  </article>
+  <Footer />
+</BaseLayout>

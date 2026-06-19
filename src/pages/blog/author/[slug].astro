@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Nav from '../../../components/Nav.astro';
+import Footer from '../../../components/Footer.astro';
+import PostCard from '../../../components/PostCard.astro';
+import { getAuthor, stripHtml } from '../../../lib/cms';
+
+export async function getStaticPaths() {
+  try {
+    const res = await fetch(`${import.meta.env.PUBLIC_CMS_API_URL || 'http://localhost:4000'}/api/authors`);
+    if (!res.ok) return [];
+    const authors = await res.json();
+    return authors.map((author: { slug: string }) => ({ params: { slug: author.slug } }));
+  } catch {
+    return [];
+  }
+}
+
+const { slug } = Astro.params;
+const author = slug ? await getAuthor(slug) : null;
+
+if (!author) {
+  return Astro.redirect('/blog/');
+}
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://www.archuramedia.com';
+const metaTitle = author.seoMetaTitle || `${author.name} | Archura Media Blog`;
+const metaDescription = author.seoMetaDescription || stripHtml(author.bio || '') || `Articles by ${author.name}`;
+const posts = author.posts || [];
+---
+
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  canonical={`${siteUrl}/blog/author/${author.slug}/`}
+  ogImage={author.avatar?.url}
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    mainEntity: {
+      '@type': 'Person',
+      name: author.name,
+      jobTitle: author.title,
+      description: metaDescription,
+      image: author.avatar?.url,
+      url: `${siteUrl}/blog/author/${author.slug}/`,
+    },
+  }}
+>
+  <Nav />
+  <main class="blog-page">
+    <div class="profile-header">
+      {author.avatar && (
+        <img class="profile-header__avatar" src={author.avatar.url} alt={author.name} />
+      )}
+      <h1>{author.name}</h1>
+      {author.title && <p class="profile-header__title">{author.title}</p>}
+      {author.bio && <div class="profile-header__bio" set:html={author.bio} />}
+      {author.socialLinks && author.socialLinks.length > 0 && (
+        <div class="author-widget__social" style="justify-content:center;margin-top:1rem;">
+          {author.socialLinks.map((link) => (
+            <a href={link.url} target="_blank" rel="noopener noreferrer">{link.platform}</a>
+          ))}
+        </div>
+      )}
+    </div>
+    <div class="container">
+      <h2 style="margin-bottom:1.5rem;">Articles by {author.name}</h2>
+      <div class="blog-grid">
+        {posts.map((post) => <PostCard post={post} />)}
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
