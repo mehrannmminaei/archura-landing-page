@@ -20,9 +20,9 @@ jobs:
       FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
 
@@ -42,7 +42,7 @@ jobs:
 
       - name: Deploy via FTP
         if: env.FTP_SERVER != ''
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ env.FTP_SERVER }}
           username: ${{ env.FTP_USERNAME }}
