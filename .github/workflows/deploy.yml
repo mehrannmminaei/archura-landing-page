@@ -41,7 +41,7 @@ jobs:
           cp robots.txt sitemap*.xml favicon.ico logo*.png dist/ 2>/dev/null || true
 
       - name: Deploy via FTP
-        if: env.FTP_SERVER != ''
+        if: vars.ENABLE_FTP_DEPLOY == 'true'
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ env.FTP_SERVER }}
