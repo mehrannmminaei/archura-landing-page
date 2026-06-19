@@ -10,7 +10,7 @@
     "postbuild": "node scripts/copy-blog.mjs",
     "preview": "astro preview",
     "serve": "node scripts/serve.mjs",
-    "start": "PUBLIC_CMS_API_URL=http://localhost:4000 npm run build && npm run serve",
+    "start": "PUBLIC_CMS_API_URL=https://blog-cms-production-a7e4.up.railway.app npm run build && npm run serve",
     "build:blog": "npm run build",
     "sitemap": "node scripts/generate-sitemap.mjs"
   },
