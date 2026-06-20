@@ -1,16 +1,20 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { defineConfig } from 'astro/config';
+import { legacyStaticIntegration } from './scripts/legacy-static.mjs';
 
-const apiUrl = process.env.PUBLIC_CMS_API_URL || 'http://localhost:4000';
+const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   site: process.env.SITE_URL || 'https://www.archuramedia.com',
-  trailingSlash: 'always',
+  trailingSlash: 'ignore',
+  integrations: [legacyStaticIntegration(rootDir)],
   build: {
     format: 'directory',
   },
   vite: {
-    define: {
-      'import.meta.env.PUBLIC_CMS_API_URL': JSON.stringify(apiUrl),
+    ssr: {
+      external: ['@prisma/client', '.prisma/client'],
     },
   },
 });

@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  author
+  editor
+}
+
+enum PostStatus {
+  draft
+  published
+}
+
+enum MediaType {
+  image
+  video
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         UserRole @default(author)
+  authorId     String?
+  author       Author?  @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Media {
+  id        String    @id @default(cuid())
+  filename  String
+  url       String
+  mimeType  String
+  type      MediaType
+  alt       String?
+  size      Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  authorAvatars   Author[]   @relation("AuthorAvatar")
+  categoryCovers  Category[] @relation("CategoryCover")
+  postCovers      Post[]     @relation("PostCover")
+  seoOgImages     Post[]     @relation("PostOgImage")
+  categoryOgImages Category[] @relation("CategoryOgImage")
+}
+
+model Author {
+  id               String   @id @default(cuid())
+  name             String
+  slug             String   @unique
+  title            String?
+  bio              String?
+  avatarId         String?
+  avatar           Media?   @relation("AuthorAvatar", fields: [avatarId], references: [id], onDelete: SetNull)
+  socialLinks      Json?
+  seoMetaTitle     String?
+  seoMetaDescription String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  posts            Post[]
+  panelUsers       User[]
+}
+
+model Category {
+  id                 String   @id @default(cuid())
+  name               String
+  slug               String   @unique
+  description        String?
+  coverImageId       String?
+  coverImage         Media?   @relation("CategoryCover", fields: [coverImageId], references: [id], onDelete: SetNull)
+  seoMetaTitle       String?
+  seoMetaDescription String?
+  seoOgImageId       String?
+  seoOgImage         Media?   @relation("CategoryOgImage", fields: [seoOgImageId], references: [id], onDelete: SetNull)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  posts              Post[]
+}
+
+model Post {
+  id                 String     @id @default(cuid())
+  title              String
+  slug               String     @unique
+  excerpt            String?
+  content            String
+  status             PostStatus @default(draft)
+  publishedAt        DateTime?
+  coverImageId       String?
+  coverImage         Media?     @relation("PostCover", fields: [coverImageId], references: [id], onDelete: SetNull)
+  authorId           String
+  author             Author     @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  categoryId         String
+  category           Category   @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  seoMetaTitle       String?
+  seoMetaDescription String?
+  seoOgTitle         String?
+  seoOgDescription   String?
+  seoOgImageId       String?
+  seoOgImage         Media?     @relation("PostOgImage", fields: [seoOgImageId], references: [id], onDelete: SetNull)
+  seoCanonicalUrl    String?
+  seoJsonLd          Json?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+}

@@ -3,14 +3,12 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Nav from '../../../components/Nav.astro';
 import Footer from '../../../components/Footer.astro';
 import PostCard from '../../../components/PostCard.astro';
-import { getAuthor, stripHtml } from '../../../lib/cms';
+import { getAuthor, getAuthors, stripHtml } from '../../../lib/cms';
 
 export async function getStaticPaths() {
   try {
-    const res = await fetch(`${import.meta.env.PUBLIC_CMS_API_URL || 'http://localhost:4000'}/api/authors`);
-    if (!res.ok) return [];
-    const authors = await res.json();
-    return authors.map((author: { slug: string }) => ({ params: { slug: author.slug } }));
+    const authors = await getAuthors();
+    return authors.map((author) => ({ params: { slug: author.slug } }));
   } catch {
     return [];
   }

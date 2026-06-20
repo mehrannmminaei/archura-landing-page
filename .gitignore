@@ -3,6 +3,13 @@ dist/
 public/
 .env
 .env.local
+**/.env
+!**/.env.example
+!api/.env.example
 uploads/
+api/dist/
+admin/dist/
 *.log
 .DS_Store
+tsconfig.tsbuildinfo
+admin/tsconfig.tsbuildinfo

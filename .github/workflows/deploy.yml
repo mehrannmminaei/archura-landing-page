@@ -3,12 +3,11 @@ name: Build and Deploy Blog
 on:
   push:
     branches: [main, master]
-  repository_dispatch:
-    types: [cms-publish]
   workflow_dispatch:
 
 env:
   SITE_URL: https://www.archuramedia.com
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/archura_blog
 
 jobs:
   build-deploy:
@@ -18,6 +17,21 @@ jobs:
       FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
       FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
       FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: archura_blog
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v6
@@ -29,10 +43,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build Astro site
-        run: npm run build
+      - name: Prepare database
+        run: npm run db:push
         env:
-          PUBLIC_CMS_API_URL: ${{ secrets.CMS_API_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL || env.DATABASE_URL }}
+
+      - name: Build Astro site
+        run: npm run build:site
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL || env.DATABASE_URL }}
 
       - name: Merge legacy static pages into dist
         run: |

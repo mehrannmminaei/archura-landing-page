@@ -1,0 +1,36 @@
+FROM node:22-alpine
+
+RUN apk add --no-cache nginx netcat-openbsd \
+  && mkdir -p /usr/share/nginx/html /run/nginx \
+  && chown -R nginx:nginx /usr/share/nginx/html /run/nginx
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+COPY api/package.json ./api/
+COPY api/prisma ./api/prisma
+
+RUN npm ci --include-workspace-root --workspace=api
+
+COPY astro.config.mjs tsconfig.json ./
+COPY scripts ./scripts
+COPY src ./src
+COPY styles ./styles
+COPY script ./script
+COPY index.html services.html industry.html ./
+COPY services ./services
+COPY industry ./industry
+COPY privacy-terms ./privacy-terms
+COPY robots.txt favicon.ico logo-v3.png logo1.png logo_.png ./
+COPY sitemap*.xml ./
+COPY api ./api
+
+RUN npm run db:generate --workspace=api
+
+COPY docker/nginx.conf /etc/nginx/http.d/default.conf
+COPY docker/build-site.sh docker/web-entrypoint.sh docker/wait-for-postgres.sh docker/wait-for-api.sh docker/rebuild-server.mjs /docker/
+RUN chmod +x /docker/build-site.sh /docker/web-entrypoint.sh /docker/wait-for-postgres.sh /docker/wait-for-api.sh
+
+EXPOSE 80
+
+ENTRYPOINT ["/docker/web-entrypoint.sh"]

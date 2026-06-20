@@ -1,32 +1,22 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import {
+  disconnectDb,
+  getAuthors,
+  getCategories,
+  getPublishedPosts,
+} from '../api/src/lib/cms-data.js';
 
-const API_URL = process.env.PUBLIC_CMS_API_URL || 'http://localhost:4000';
 const SITE_URL = process.env.SITE_URL || 'https://www.archuramedia.com';
 const root = path.dirname(fileURLToPath(import.meta.url));
 
-async function fetchSlugs(endpoint) {
-  try {
-    const res = await fetch(`${API_URL}${endpoint}`);
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
-}
-
-const staticUrls = [
-  '',
-  'services.html',
-  'industry.html',
-  'blog/',
-];
+const staticUrls = ['', 'services.html', 'industry.html', 'blog/'];
 
 const [posts, categories, authors] = await Promise.all([
-  fetchSlugs('/api/posts?status=published'),
-  fetchSlugs('/api/categories'),
-  fetchSlugs('/api/authors'),
+  getPublishedPosts(),
+  getCategories(),
+  getAuthors(),
 ]);
 
 const urls = [
@@ -43,4 +33,5 @@ ${urls.map((url) => `  <url><loc>${url}</loc><lastmod>${today}</lastmod></url>`)
 </urlset>`;
 
 fs.writeFileSync(path.join(root, '..', 'sitemap-blog.xml'), xml);
+await disconnectDb();
 console.log(`Generated sitemap with ${urls.length} URLs`);

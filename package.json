@@ -1,20 +1,41 @@
 {
-  "name": "archura-media-site",
+  "name": "archura-media",
   "type": "module",
   "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "api",
+    "admin"
+  ],
   "scripts": {
-    "dev": "astro dev",
-    "dev:blog": "astro dev",
+    "dev": "node scripts/prebuild.mjs && astro dev",
+    "dev:site": "node scripts/prebuild.mjs && astro dev",
+    "dev:api": "npm run dev --workspace=api",
+    "dev:admin": "npm run dev --workspace=admin",
+    "dev:cms": "concurrently -n api,admin -c blue,green \"npm run dev:api\" \"npm run dev:admin\"",
     "prebuild": "node scripts/prebuild.mjs",
-    "build": "astro build",
+    "build": "npm run build:site",
+    "build:all": "npm run build:cms && npm run build:site",
+    "build:cms": "npm run build --workspace=admin && npm run build --workspace=api",
+    "build:site": "node scripts/prebuild.mjs && astro build && node scripts/copy-blog.mjs",
     "postbuild": "node scripts/copy-blog.mjs",
     "preview": "astro preview",
     "serve": "node scripts/serve.mjs",
-    "start": "PUBLIC_CMS_API_URL=https://blog-cms-production-a7e4.up.railway.app npm run build && npm run serve",
-    "build:blog": "npm run build",
-    "sitemap": "node scripts/generate-sitemap.mjs"
+    "start": "npm run build:site && npm run serve",
+    "start:api": "npm run start --workspace=api",
+    "db:push": "npm run db:push --workspace=api",
+    "db:seed": "npm run db:seed --workspace=api",
+    "db:setup": "npm run db:push && npm run db:seed",
+    "sitemap": "tsx scripts/generate-sitemap.ts",
+    "docker:prod": "docker compose -f docker-compose.prod.yml --env-file .env up -d --build",
+    "docker:prod:down": "docker compose -f docker-compose.prod.yml down",
+    "docker:rebuild-site": "docker compose -f docker-compose.prod.yml exec web /docker/build-site.sh && docker compose -f docker-compose.prod.yml exec web nginx -s reload"
   },
   "dependencies": {
     "astro": "^5.7.10"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "tsx": "^4.19.3"
   }
 }

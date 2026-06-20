@@ -1,0 +1,37 @@
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+COPY api/package.json ./api/
+COPY api/prisma ./api/prisma
+COPY admin/package.json ./admin/
+
+RUN npm ci --include-workspace-root --workspace=api --workspace=admin
+
+COPY api ./api
+COPY admin ./admin
+
+RUN npm run build --workspace=admin && npm run build --workspace=api
+RUN npm prune --omit=dev
+
+FROM node:22-alpine
+
+RUN apk add --no-cache netcat-openbsd
+
+WORKDIR /app
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/api ./api
+COPY --from=builder /app/admin/dist ./admin/dist
+
+COPY docker/api-entrypoint.sh docker/wait-for-postgres.sh /docker/
+RUN chmod +x /docker/api-entrypoint.sh /docker/wait-for-postgres.sh
+
+VOLUME ["/app/uploads"]
+
+EXPOSE 4000
+
+ENTRYPOINT ["/docker/api-entrypoint.sh"]
+CMD ["node", "api/dist/index.js"]
